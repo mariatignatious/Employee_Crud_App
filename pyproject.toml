@@ -1,0 +1,43 @@
+[project]
+name = "employee-crud-app"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.18.4",
+    "asyncpg>=0.31.0",
+    "fastapi>=0.136.3",
+    "pydantic>=2.13.4",
+    "pydantic[email]>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "python-dotenv>=1.2.2",
+    "sqlalchemy>=2.0.50",
+    "uvicorn[standard]>=0.48.0",
+    "bcrypt>=5.0.0",
+    "python-jose[cryptography]>=3.5.0",
+    "greenlet>=3.5.1",
+    "multipart>=1.3.1",
+    "python-multipart>=0.0.30",
+]
+
+[dependency-groups]
+dev = [
+    "aiosqlite>=0.22.1",
+    "httpx>=0.28.1",
+    "poethepoet>=0.46.0",
+    "pre-commit>=4.6.0",
+    "pytest>=9.0.3",
+    "pytest-asyncio>=1.4.0",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.15.15",
+]
+
+[tool.pytest.ini_options]
+testpaths      = ["tests"]
+           # only walk tests/, not the whole repo
+python_files   = ["test_*.py"]
+        # files pytest treats as test files
+python_classes = ["Test*"]
+            # class names that group tests
+python_functions = ["test_*"]
