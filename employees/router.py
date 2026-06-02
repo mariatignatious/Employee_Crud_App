@@ -3,10 +3,12 @@ from fastapi import APIRouter, Body, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.connection import get_db
-from services import employee_service
+from employees import service
 from models.employee import EmployeeRole
-from employees.schemas import EmployeeCreate, EmployeeResponse, GetbyidResponse
-
+from employees.schemas import EmployeeCreate, EmployeeResponse, GetbyidResponse, UpdateResponse, UpdateCreate
+from addresses import router as address_router
+from departments import router as department_router
+from emp_department import router as emp_dept_router
 from auth.dependencies import get_current_user, require_role
 from auth.schemas import TokenPayload
 
@@ -21,7 +23,10 @@ router = APIRouter(prefix="/employees", tags=["Employees"])
     dependencies=[Depends(require_role(EmployeeRole.HR))],
 )
 async def create_employee(body: EmployeeCreate, db: AsyncSession = Depends(get_db)):
-    employee = await employee_service.create(db, body.name, body.email, body.age, body.password, body.role)
+    employee = await service.create(db, body.name, body.email, body.age, body.password, body.role)
+    address = await address_router.create_address(employee.id, body.address, db)
+    dept = await department_router.create_department(body.department, db)
+    emp_dept = await emp_dept_router.attach(employee.id, dept.id, db)
     return employee
 
 
@@ -30,7 +35,7 @@ async def get_all_employees(
     db: AsyncSession = Depends(get_db),
     _current_user: TokenPayload = Depends(get_current_user),
 ):
-    result = await employee_service.get_all_employees(db)
+    result = await service.get_all_employees(db)
     return result
 
 
@@ -40,31 +45,28 @@ async def get_by_name(
     db: AsyncSession = Depends(get_db),
     _current_user: TokenPayload = Depends(get_current_user),
 ):
-    result = await employee_service.get_by_name(name, db)
+    result = await service.get_by_name(name, db)
     print(result)
     return result
 
 
 @router.get("/{id}", response_model=GetbyidResponse)
-async def get_employee_id(id: int, db: AsyncSession = Depends(get_db)):
-    result = await employee_service.get_employee_id(id, db)
+async def get_employee_id(id: int, db: AsyncSession = Depends(get_db), _current_user: TokenPayload = Depends(get_current_user)):
+    result = await service.get_employee_id(id, db)
     return result
 
 
-@router.put("/{id}", dependencies=[Depends(require_role(EmployeeRole.HR))])
+@router.put("/{id}", response_model=UpdateResponse, dependencies=[Depends(require_role(EmployeeRole.HR))])
 async def update_employee(
-    emp_id: int, body: dict = Body(...), db: AsyncSession = Depends(get_db)
+    emp_id: int, body: UpdateCreate, db: AsyncSession = Depends(get_db)
 ):
-    name = body.get("name")
-    email = body.get("email")
-    role = body.get("role")
-    result = await employee_service.update_employee(emp_id, name, email, role, db)
+    result = await service.update_employee(emp_id, body.name, body.email, body.role, body.department, db)
     return result
 
 
 @router.delete("/{id}", dependencies=[Depends(require_role(EmployeeRole.HR))])
 async def delete_employee(id: int, db: AsyncSession = Depends(get_db)):
-    result = await employee_service.delete_employee(id, db)
+    result = await service.delete_employee(id, db)
     return {
-        "message": "Employee deleted",
+        "message": f"Employee {id} deleted",
     }

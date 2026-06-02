@@ -7,8 +7,9 @@ from database.connection import get_db
 from emp_department import service
 from emp_department.schemas import EmployeeDepartmentResponse
 
-# , dependencies=[Depends(get_current_user)]
-router = APIRouter(prefix="/employee_department", tags=["Employee_Department"])
+from auth.dependencies import get_current_user
+
+router = APIRouter(prefix="/employee_department", tags=["Employee_Department"], dependencies=[Depends(get_current_user)])
 
 
 @router.post("/{emp_id}/departments/{dept_id}", response_model=EmployeeDepartmentResponse, status_code=status.HTTP_201_CREATED)

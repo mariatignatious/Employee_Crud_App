@@ -1,11 +1,11 @@
 from auth.utils import create_access_token, verify_password, create_refresh_token, decode_access_token
 from exceptions import UnauthorizedException
-from repository import employee_repo
+from employees import repo
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
 async def login(db: AsyncSession, email: str, password: str):
-    employee = await employee_repo.get_by_email(db, email)
+    employee = await repo.get_by_email(db, email)
     if employee is None:
         raise UnauthorizedException("invalid email or password")
     if not verify_password(password, employee.password_hash):
