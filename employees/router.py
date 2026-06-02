@@ -21,9 +21,7 @@ router = APIRouter(prefix="/employees", tags=["Employees"])
     dependencies=[Depends(require_role(EmployeeRole.HR))],
 )
 async def create_employee(body: EmployeeCreate, db: AsyncSession = Depends(get_db)):
-    employee = await employee_service.create(
-        db, body.name, body.email, body.age, body.password
-    )
+    employee = await employee_service.create(db, body.name, body.email, body.age, body.password, body.role)
     return employee
 
 
@@ -59,7 +57,8 @@ async def update_employee(
 ):
     name = body.get("name")
     email = body.get("email")
-    result = await employee_service.update_employee(emp_id, name, email, db)
+    role = body.get("role")
+    result = await employee_service.update_employee(emp_id, name, email, role, db)
     return result
 
 

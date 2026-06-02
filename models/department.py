@@ -16,15 +16,13 @@ class Department(Entity):
     __abstract__ = False
     __tablename__ = "department"
 
-    name: Mapped[str] = mapped_column(String(100), nullable=False)
-
-    employees: Mapped[list["Employee"]] = relationship(
-    "Employee",
-    secondary="employee_department",
-    back_populates="departments"
-    )
-
+    name: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
     employee_departments: Mapped[list["EmployeeDepartment"]] = relationship(
-    "EmployeeDepartment",
-    back_populates="department"
+        "EmployeeDepartment", back_populates="department"
+    )
+    employees: Mapped[list["Employee"]] = relationship(
+        "Employee",
+        secondary=EmployeeDepartment.__table__,
+        back_populates="departments",
+        viewonly=True,
     )

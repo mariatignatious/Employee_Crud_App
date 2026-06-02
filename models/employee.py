@@ -12,9 +12,13 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from models.emp_department import EmployeeDepartment
 
-
 import enum
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from models.address import Address
+    from models.department import Department
 
 def _datetime_to_iso(value: datetime | None) -> str | None:
     if value is None:
@@ -33,13 +37,12 @@ class Employee(Entity):
     __abstract__ = False
     __tablename__ = "employees"  # name of the table in the database
 
-    # id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True, index=True) #id is the primary key, autoincrement true to automatically generate a new id for each new employee, index true to create an index on the id column for faster queries
     name: Mapped[str] = mapped_column(
         String(100), nullable=False
-    )  # name is a string column with a maximum length of 100 characters, nullable false to prevent null values
+    )  
     email: Mapped[str] = mapped_column(
         String(255), nullable=False, unique=True
-    )  # email is a string column with a maximum length of 255 characters, nullable false to prevent null values, unique true to prevent duplicate email addresses
+    )  
     age: Mapped[int] = mapped_column(Integer, nullable=True)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
 
@@ -51,11 +54,12 @@ class Employee(Entity):
     )
 
     departments: Mapped[list["Department"]] = relationship(
-    "Department",
-    secondary="employee_department",
-    back_populates="employees"
+        "Department",
+        secondary=EmployeeDepartment.__table__,
+        back_populates="employees",
+        viewonly=True,
     )
-
+    
     role: Mapped[EmployeeRole] = mapped_column(
         Enum(
             EmployeeRole,
@@ -70,6 +74,7 @@ class Employee(Entity):
     "EmployeeDepartment",
     back_populates="employee"
     )
+
     
 
     # added these in entity

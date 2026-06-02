@@ -3,7 +3,7 @@ from datetime import datetime
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from addresses.schemas import AddressCreate
 from departments.schemas import DepartmentCreate
-
+from models.employee import EmployeeRole
 
 class EmployeeCreate(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
@@ -13,6 +13,7 @@ class EmployeeCreate(BaseModel):
     address: AddressCreate | None = None
     department: DepartmentCreate | None = None
     password: str = Field(min_length=6)
+    role: EmployeeRole | None = None
 
 
 class EmployeeResponse(BaseModel):  # how the output should look like
@@ -21,6 +22,7 @@ class EmployeeResponse(BaseModel):  # how the output should look like
     name: str
     email: str
     age: int | None
+    role: str
 
 
 class GetbyidResponse(BaseModel):
@@ -29,5 +31,6 @@ class GetbyidResponse(BaseModel):
     name: str
     email: str
     age: int | None
+    role: str
     created_at: datetime
     updated_at: datetime

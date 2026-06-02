@@ -7,12 +7,10 @@ from auth.utils import hash_password
 
 
 async def create(
-    db: AsyncSession, name: str, email: str, age: int, password: str
+    db: AsyncSession, name: str, email: str, age: int, password: str, role: str
 ) -> Employee:  # connects to repository to create an employee and returns the created employee object
     hashed = hash_password(password)
-    employee = await employee_repo.create(
-        db, name=name, email=email, age=age, password=hashed
-    )
+    employee = await employee_repo.create(db, name=name, email=email, age=age, password=hashed, role=role)
     return employee
 
 
@@ -34,15 +32,13 @@ async def get_employee_id(id: int, db: AsyncSession) -> Employee:
 
 
 async def update_employee(
-    emp_id: int, name: str, email: str, db: AsyncSession
+    emp_id: int, name: str, email: str, role: str, db: AsyncSession
 ) -> Employee:
     if not isinstance(name, str) or not name.strip():
         raise BadRequestException("name must be a non-empty string")
     if not isinstance(email, str) or not email.strip():
         raise BadRequestException("email must be a non-empty string")
-    employee = await employee_repo.update_employee(
-        db, emp_id=emp_id, name=name.strip(), email=email.strip()
-    )
+    employee = await employee_repo.update_employee(db, emp_id=emp_id, name=name.strip(), email=email.strip(), role=role.strip())
     return employee
 
 

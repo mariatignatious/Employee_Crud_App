@@ -7,11 +7,11 @@ from models.employee import Employee
 
 
 async def create(
-    db: AsyncSession, name: str, email: str, age: int, password: str
+    db: AsyncSession, name: str, email: str, age: int, password: str, role:str
 ) -> (
     Employee
 ):  # connects to db, creates an employee and returns the created employee object
-    db_employee = Employee(name=name, email=email, age=age, password_hash=password)
+    db_employee = Employee(name=name, email=email, age=age, password_hash=password, role=role)
     db.add(db_employee)
     try:
         await db.commit()
@@ -41,12 +41,13 @@ async def get_employee_id(id: int, db: AsyncSession) -> Employee:
 
 
 async def update_employee(
-    db: AsyncSession, emp_id: int, name: str, email: str
+    db: AsyncSession, emp_id: int, name: str, email: str, role:str
 ) -> Employee:
     stmt = select(Employee).where(Employee.id == emp_id, Employee.deleted_at.is_(None))
     result = await db.scalar(stmt)
     result.name = name
     result.email = email
+    result.role = role
 
     try:
         await db.commit()
