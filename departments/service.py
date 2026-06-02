@@ -20,7 +20,7 @@ async def get_all_departments(db: AsyncSession) -> Department:
 async def get_department_id(id: int, db: AsyncSession) -> Department:
     result = await repo.get_department_id(id, db)
     if result is None:
-        raise NotFoundException("Department not found")
+        raise NotFoundException(f"Department {id} not found")
     return result
 
 
