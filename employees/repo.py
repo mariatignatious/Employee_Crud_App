@@ -7,11 +7,13 @@ from models.employee import Employee
 
 
 async def create(
-    db: AsyncSession, name: str, email: str, age: int, password: str, role:str
+    db: AsyncSession, name: str, email: str, age: int, password: str, role: str
 ) -> (
     Employee
 ):  # connects to db, creates an employee and returns the created employee object
-    db_employee = Employee(name=name, email=email, age=age, password_hash=password, role=role)
+    db_employee = Employee(
+        name=name, email=email, age=age, password_hash=password, role=role
+    )
     db.add(db_employee)
     try:
         await db.commit()
@@ -41,7 +43,7 @@ async def get_employee_id(id: int, db: AsyncSession) -> Employee:
 
 
 async def update_employee(
-    db: AsyncSession, emp_id: int, name: str, email: str, role:str, department:str
+    db: AsyncSession, emp_id: int, name: str, email: str, role: str, department: str
 ) -> Employee:
     stmt = select(Employee).where(Employee.id == emp_id, Employee.deleted_at.is_(None))
     result = await db.scalar(stmt)
@@ -55,7 +57,10 @@ async def update_employee(
         await db.refresh(result)
     except IntegrityError:
         await db.rollback()
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT,detail=f"Email '{email.strip()}' is already in use")
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Email '{email.strip()}' is already in use",
+        )
 
     return result
 

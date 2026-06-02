@@ -20,6 +20,7 @@ if TYPE_CHECKING:
     from models.address import Address
     from models.department import Department
 
+
 def _datetime_to_iso(value: datetime | None) -> str | None:
     if value is None:
         return None
@@ -37,12 +38,8 @@ class Employee(Entity):
     __abstract__ = False
     __tablename__ = "employees"  # name of the table in the database
 
-    name: Mapped[str] = mapped_column(
-        String(100), nullable=False
-    )  
-    email: Mapped[str] = mapped_column(
-        String(255), nullable=False, unique=True
-    )  
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
     age: Mapped[int] = mapped_column(Integer, nullable=True)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
 
@@ -59,7 +56,7 @@ class Employee(Entity):
         back_populates="employees",
         viewonly=True,
     )
-    
+
     role: Mapped[EmployeeRole] = mapped_column(
         Enum(
             EmployeeRole,
@@ -71,11 +68,8 @@ class Employee(Entity):
     )
 
     employee_departments: Mapped[list["EmployeeDepartment"]] = relationship(
-    "EmployeeDepartment",
-    back_populates="employee"
+        "EmployeeDepartment", back_populates="employee"
     )
-
-    
 
     # added these in entity
     # created_at: Mapped[datetime] = mapped_column( #created_at is a datetime column with timezone information, server_default func.now() to automatically set the current timestamp when a new employee is created, nullable false to prevent null values

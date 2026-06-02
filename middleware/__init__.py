@@ -1,8 +1,5 @@
-from fastapi import FastAPI, Body, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import IntegrityError
-from fastapi.concurrency import asynccontextmanager
+from fastapi import FastAPI
 
 from middleware.logger import RequestLoggingMiddleware
 

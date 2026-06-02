@@ -8,9 +8,11 @@ class TokenResponse(BaseModel):
     refresh_token: str
     token_types: str = "bearer"
 
+
 class RefreshTokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
+
 
 class RefreshTokenRequest(BaseModel):
     refresh_token: str

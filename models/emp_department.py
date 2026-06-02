@@ -12,8 +12,12 @@ class EmployeeDepartment(Entity):
     __abstract__ = False
     __tablename__ = "employee_department"
 
-    employee_id: Mapped[int] = mapped_column(Integer, ForeignKey("employees.id"), nullable=False, index=True)
-    department_id: Mapped[int] = mapped_column(Integer, ForeignKey("department.id"), nullable=False, index=True)
+    employee_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("employees.id"), nullable=False, index=True
+    )
+    department_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("department.id"), nullable=False, index=True
+    )
 
     employee: Mapped["Employee"] = relationship(
         "Employee",
@@ -24,4 +28,3 @@ class EmployeeDepartment(Entity):
         "Department",
         back_populates="employee_departments",
     )
-

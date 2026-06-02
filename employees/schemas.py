@@ -5,6 +5,7 @@ from addresses.schemas import AddressCreate
 from departments.schemas import DepartmentCreate
 from models.employee import EmployeeRole
 
+
 class EmployeeCreate(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
     name: str = Field(min_length=1)
@@ -35,12 +36,14 @@ class GetbyidResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
 
+
 class UpdateCreate(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
     name: str = Field(min_length=1)
     email: EmailStr
     role: EmployeeRole | None = None
-    department : str
+    department: str
+
 
 class UpdateResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -49,6 +52,6 @@ class UpdateResponse(BaseModel):
     email: str
     age: int | None
     role: str
-    department : str
+    department: str
     created_at: datetime
     updated_at: datetime

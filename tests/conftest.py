@@ -1,9 +1,6 @@
-from auth.utils import hash_password
 from database import Base
 import pytest_asyncio
-import pytest
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-
 
 
 # The fixture: a single function that owns the engine, the schema, and
@@ -25,8 +22,7 @@ async def db_session():
 
     # ── HAND-OFF — pytest pauses the fixture here and runs the test ──
     try:
-        yield db                                       # test receives this as the `db_session` arg
-
+        yield db  # test receives this as the `db_session` arg
 
     finally:
         # ── TEARDOWN — runs even if the test raised an exception ────────

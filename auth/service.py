@@ -1,4 +1,9 @@
-from auth.utils import create_access_token, verify_password, create_refresh_token, decode_access_token
+from auth.utils import (
+    create_access_token,
+    verify_password,
+    create_refresh_token,
+    decode_access_token,
+)
 from exceptions import UnauthorizedException
 from employees import repo
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,8 +16,12 @@ async def login(db: AsyncSession, email: str, password: str):
     if not verify_password(password, employee.password_hash):
         raise UnauthorizedException("invalid email or password")
 
-    access_token = create_access_token({"id": employee.id, "email": employee.email, "role": employee.role.value})
-    refresh_token = create_refresh_token({"id": employee.id, "email": employee.email, "role": employee.role.value})
+    access_token = create_access_token(
+        {"id": employee.id, "email": employee.email, "role": employee.role.value}
+    )
+    refresh_token = create_refresh_token(
+        {"id": employee.id, "email": employee.email, "role": employee.role.value}
+    )
     return {"access_token": access_token, "refresh_token": refresh_token}
 
 

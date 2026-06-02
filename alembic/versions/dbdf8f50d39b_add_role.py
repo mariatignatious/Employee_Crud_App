@@ -54,11 +54,9 @@ def upgrade() -> None:
     )
 
     op.add_column(
-    "employee_department",
-    sa.Column("id", sa.Integer(), nullable=True),
-)
-
-    
+        "employee_department",
+        sa.Column("id", sa.Integer(), nullable=True),
+    )
 
     # ### end Alembic commands ###
 
@@ -73,4 +71,3 @@ def downgrade() -> None:
     op.drop_column("employee_department", "created_at")
     op.drop_column("employee_department", "id")
     # ### end Alembic commands ###
-

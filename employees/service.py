@@ -11,7 +11,9 @@ async def create(
     db: AsyncSession, name: str, email: str, age: int, password: str, role: EmployeeRole
 ) -> Employee:  # connects to repository to create an employee and returns the created employee object
     hashed = hash_password(password)
-    employee = await repo.create(db, name=name, email=email, age=age, password=hashed, role=role)
+    employee = await repo.create(
+        db, name=name, email=email, age=age, password=hashed, role=role
+    )
     return employee
 
 
@@ -39,7 +41,14 @@ async def update_employee(
         raise BadRequestException("name must be a non-empty string")
     if not isinstance(email, str) or not email.strip():
         raise BadRequestException("email must be a non-empty string")
-    employee = await repo.update_employee(db, emp_id=emp_id, name=name.strip(), email=email.strip(), role=role.strip(), department=department.strip())
+    employee = await repo.update_employee(
+        db,
+        emp_id=emp_id,
+        name=name.strip(),
+        email=email.strip(),
+        role=role.strip(),
+        department=department.strip(),
+    )
     return employee
 
 
