@@ -1,16 +1,18 @@
-import bcrypt
-
-from datetime import datetime, timedelta, timezone
-from jose import JWTError, jwt
-from config import settings
-
 """
+Authentication utilities.
+
 if pass is test123 it will be encoded, it will create a salt, it will decoded and plane password stored in db.
 when we type password, plane password in db, and given password is compared.
 salt - it is used to generate random hash value, this salt will also be stored in db, so when we enter the password,
 it will convert our password into hash using the stored salt, then it compares.
 in service we will hash the password
 """
+
+import bcrypt
+
+from datetime import datetime, timedelta, timezone
+from jose import JWTError, jwt
+from config import settings
 
 
 def hash_password(plain: str) -> str:
@@ -25,6 +27,14 @@ def create_access_token(data: dict) -> str:
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(minutes=settings.jwt_expiry_minutes)
     to_encode["exp"] = expire
+    to_encode["type"] = "access"
+    return jwt.encode(to_encode, settings.jwt_secret, algorithm=settings.jwt_algorithm)
+
+def create_refresh_token(data: dict) -> str:
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + timedelta(days=1)
+    to_encode["exp"] = expire
+    to_encode["type"] = "refresh"
     return jwt.encode(to_encode, settings.jwt_secret, algorithm=settings.jwt_algorithm)
 
 
