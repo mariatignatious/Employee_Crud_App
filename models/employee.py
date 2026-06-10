@@ -33,6 +33,11 @@ class EmployeeRole(str, enum.Enum):
     DEVELOPER = "Developer"
     HR = "HR"
 
+# class EmployeeStatus(str, enum.Enum):
+#     Active = "Active"
+#     Inactive = "Inactive"
+#     Probation = "Probation"
+
 
 class Employee(Entity):
     __abstract__ = False
@@ -66,6 +71,16 @@ class Employee(Entity):
         nullable=False,
         server_default=EmployeeRole.DEVELOPER.value,
     )
+
+    # status: Mapped[EmployeeStatus] = mapped_column(
+    #     Enum(
+    #         EmployeeStatus,
+    #         name="employeestatus",
+    #         values_callable=lambda enum_cls: [e.value for e in enum_cls],
+    #     ),
+    #     nullable=False,
+    #     server_default=EmployeeStatus.Active.value,
+    # )
 
     employee_departments: Mapped[list["EmployeeDepartment"]] = relationship(
         "EmployeeDepartment", back_populates="employee"

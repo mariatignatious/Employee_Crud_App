@@ -40,18 +40,21 @@ class GetbyidResponse(BaseModel):
 class UpdateCreate(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
     name: str = Field(min_length=1)
-    email: EmailStr
     role: EmployeeRole | None = None
-    department: str
+    age: int | None
+    email: str
+    password: str
+    address: AddressCreate | None = None
+    department: DepartmentCreate | None = None
 
 
 class UpdateResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
-    id: int
     name: str
     email: str
     age: int | None
     role: str
-    department: str
+    address: AddressCreate | None = None
+    department: DepartmentCreate | None = None
     created_at: datetime
     updated_at: datetime

@@ -70,14 +70,14 @@ async def get_employee_id(
 
 @router.put(
     "/{id}",
-    response_model=UpdateResponse,
+    # response_model=UpdateResponse,
     dependencies=[Depends(require_role(EmployeeRole.HR))],
 )
 async def update_employee(
-    emp_id: int, body: UpdateCreate, db: AsyncSession = Depends(get_db)
+    id: int, body: UpdateCreate, db: AsyncSession = Depends(get_db)
 ):
     result = await service.update_employee(
-        emp_id, body.name, body.email, body.role, body.department, db
+        id, body.name, body.email, body.role, body.department, db
     )
     return result
 

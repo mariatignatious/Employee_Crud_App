@@ -35,7 +35,7 @@ async def get_employee_id(id: int, db: AsyncSession) -> Employee:
 
 
 async def update_employee(
-    emp_id: int, name: str, email: str, role: str, department: str, db: AsyncSession
+    id: int, name: str, email: str, role: str, department: str, db: AsyncSession
 ) -> Employee:
     if not isinstance(name, str) or not name.strip():
         raise BadRequestException("name must be a non-empty string")
@@ -43,11 +43,11 @@ async def update_employee(
         raise BadRequestException("email must be a non-empty string")
     employee = await repo.update_employee(
         db,
-        emp_id=emp_id,
+        id,
         name=name.strip(),
         email=email.strip(),
         role=role.strip(),
-        department=department.strip(),
+        department=department,
     )
     return employee
 

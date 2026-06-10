@@ -43,9 +43,9 @@ async def get_employee_id(id: int, db: AsyncSession) -> Employee:
 
 
 async def update_employee(
-    db: AsyncSession, emp_id: int, name: str, email: str, role: str, department: str
+    db: AsyncSession, id: int, name: str, email: str, role: str, department: str
 ) -> Employee:
-    stmt = select(Employee).where(Employee.id == emp_id, Employee.deleted_at.is_(None))
+    stmt = select(Employee).where(Employee.id == id, Employee.deleted_at.is_(None))
     result = await db.scalar(stmt)
     result.name = name
     result.email = email
