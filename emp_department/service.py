@@ -3,7 +3,7 @@ from exceptions import ConflictException, NotFoundException
 
 from emp_department import repo
 from models.emp_department import EmployeeDepartment
-from services import employee_service
+from employees import service as employee_service
 from departments import service as department_service
 
 

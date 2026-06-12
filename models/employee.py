@@ -33,10 +33,10 @@ class EmployeeRole(str, enum.Enum):
     DEVELOPER = "Developer"
     HR = "HR"
 
-# class EmployeeStatus(str, enum.Enum):
-#     Active = "Active"
-#     Inactive = "Inactive"
-#     Probation = "Probation"
+class EmployeeStatus(str, enum.Enum):
+    ACTIVE = "Active"
+    INACTIVE = "Inactive"
+    PROBATION = "Probation"
 
 
 class Employee(Entity):
@@ -72,19 +72,20 @@ class Employee(Entity):
         server_default=EmployeeRole.DEVELOPER.value,
     )
 
-    # status: Mapped[EmployeeStatus] = mapped_column(
-    #     Enum(
-    #         EmployeeStatus,
-    #         name="employeestatus",
-    #         values_callable=lambda enum_cls: [e.value for e in enum_cls],
-    #     ),
-    #     nullable=False,
-    #     server_default=EmployeeStatus.Active.value,
-    # )
+    status: Mapped[EmployeeStatus] = mapped_column(
+        Enum(
+            EmployeeStatus,
+            name="status",
+            values_callable=lambda enum_cls: [e.value for e in enum_cls],
+        ),
+        nullable=False,
+        server_default=EmployeeStatus.ACTIVE.value,
+    )
 
     employee_departments: Mapped[list["EmployeeDepartment"]] = relationship(
         "EmployeeDepartment", back_populates="employee"
     )
+    experience: Mapped[int] = mapped_column(Integer, nullable=False)
 
     # added these in entity
     # created_at: Mapped[datetime] = mapped_column( #created_at is a datetime column with timezone information, server_default func.now() to automatically set the current timestamp when a new employee is created, nullable false to prevent null values

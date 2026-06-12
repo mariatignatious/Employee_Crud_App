@@ -6,7 +6,7 @@ from models.employee import EmployeeRole
 class TokenResponse(BaseModel):
     access_token: str
     refresh_token: str
-    token_types: str = "bearer"
+    token_type: str = "bearer"
 
 
 class RefreshTokenResponse(BaseModel):

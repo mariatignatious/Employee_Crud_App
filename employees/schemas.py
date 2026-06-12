@@ -1,9 +1,9 @@
 from datetime import datetime
 
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
-from addresses.schemas import AddressCreate
+from addresses.schemas import AddressCreate, AddressResponse
 from departments.schemas import DepartmentCreate
-from models.employee import EmployeeRole
+from models.employee import EmployeeRole, EmployeeStatus, EmployeeStatus
 
 
 class EmployeeCreate(BaseModel):
@@ -14,7 +14,9 @@ class EmployeeCreate(BaseModel):
     address: AddressCreate | None = None
     department: DepartmentCreate | None = None
     password: str = Field(min_length=6)
-    role: EmployeeRole | None = None
+    role: EmployeeRole = EmployeeRole.DEVELOPER
+    status: EmployeeStatus = EmployeeStatus.ACTIVE
+    experience: int = 1
 
 
 class EmployeeResponse(BaseModel):  # how the output should look like
@@ -24,6 +26,10 @@ class EmployeeResponse(BaseModel):  # how the output should look like
     email: str
     age: int | None
     role: str
+    status: EmployeeStatus
+    experience: int
+    addresses: list[AddressResponse] | None = None
+    created_at: datetime
 
 
 class GetbyidResponse(BaseModel):
@@ -35,18 +41,22 @@ class GetbyidResponse(BaseModel):
     role: str
     created_at: datetime
     updated_at: datetime
+    status: EmployeeStatus
+    experience: int
+    addresses: list[AddressResponse] | None = None
 
 
 class UpdateCreate(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
     name: str = Field(min_length=1)
-    role: EmployeeRole | None = None
-    age: int | None
     email: str
-    password: str
-    address: AddressCreate | None = None
+    age: int | None = Field(default=None, ge=0, le=150)
+    password: str | None = Field(default=None, min_length=6)
+    role: EmployeeRole | None = None
+    status: EmployeeStatus | None = None
+    experience: int | None = None
     department: DepartmentCreate | None = None
-
+    address: AddressCreate | None = None
 
 class UpdateResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -54,7 +64,8 @@ class UpdateResponse(BaseModel):
     email: str
     age: int | None
     role: str
-    address: AddressCreate | None = None
+    experience: int
+    address: AddressResponse | None = None
     department: DepartmentCreate | None = None
     created_at: datetime
     updated_at: datetime

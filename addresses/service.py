@@ -4,7 +4,7 @@ from exceptions import BadRequestException, NotFoundException
 from addresses import repo
 from models.address import Address
 from addresses.schemas import AddressCreate
-from services import employee_service
+from employees import service as employee_service
 
 
 async def create_address(db: AsyncSession, body: AddressCreate, emp_id: int) -> Address:

@@ -30,7 +30,14 @@ router = APIRouter(prefix="/employees", tags=["Employees"])
 )
 async def create_employee(body: EmployeeCreate, db: AsyncSession = Depends(get_db)):
     employee = await service.create(
-        db, body.name, body.email, body.age, body.password, body.role
+        db,
+        body.name,
+        body.email,
+        body.age,
+        body.password,
+        body.role,
+        body.status,
+        body.experience,
     )
     address = await address_router.create_address(employee.id, body.address, db)
     dept = await department_router.create_department(body.department, db)
@@ -40,10 +47,11 @@ async def create_employee(body: EmployeeCreate, db: AsyncSession = Depends(get_d
 
 @router.get("", response_model=list[EmployeeResponse])
 async def get_all_employees(
+    status: str | None = None,
     db: AsyncSession = Depends(get_db),
     _current_user: TokenPayload = Depends(get_current_user),
 ):
-    result = await service.get_all_employees(db)
+    result = await service.get_all_employees(db, status)
     return result
 
 
@@ -76,8 +84,13 @@ async def get_employee_id(
 async def update_employee(
     id: int, body: UpdateCreate, db: AsyncSession = Depends(get_db)
 ):
+    # Get only the fields that were explicitly set in the request
+    update_data = body.model_dump(exclude_unset=True)
+    
     result = await service.update_employee(
-        id, body.name, body.email, body.role, body.department, db
+        id=id,
+        update_data=update_data,
+        db=db,
     )
     return result
 
